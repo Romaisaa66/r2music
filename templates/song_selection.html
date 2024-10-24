@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select a Song for {{ emotion }}</title>
+    <script>
+        function disableButton() {
+            document.getElementById('playButton').disabled = true;
+        }
+    </script>
+</head>
+<body>
+    <h1>Select a Song for {{ emotion }}</h1>
+    <form action="{{ url_for('play_song') }}" method="post" onsubmit="disableButton()">
+        {% for track in tracks %}
+            <div>
+                <input type="radio" id="{{ track.name }}" name="track_url" value="{{ track.url }}" required>
+                <label for="{{ track.name }}">{{ track.name }}</label>
+            </div>
+        {% endfor %}
+        <button type="submit" id="playButton">Play Selected Song</button>
+    </form>
+    <br>
+    <a href="{{ url_for('index') }}">Go Back</a>
+</body>
+</html>

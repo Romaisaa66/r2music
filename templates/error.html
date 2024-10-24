@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>Calculate Accuracy and Error Rate</h1>
+    <form action="/calculate" method="POST">
+        <label for="total">Total Predictions:</label>
+        <input type="number" id="total" name="total" required>
+        <br>
+        <label for="correct">Correct Predictions:</label>
+        <input type="number" id="correct" name="correct" required>
+        <br>
+
+        <h2>Validation Data</h2>
+        <label for="validation_total">Total Validation Predictions:</label>
+        <input type="number" id="validation_total" name="validation_total" required>
+        <br>
+        <label for="validation_correct">Correct Validation Predictions:</label>
+        <input type="number" id="validation_correct" name="validation_correct" required>
+        <br>
+
+        <h2>Testing Data</h2>
+        <label for="testing_total">Total Testing Predictions:</label>
+        <input type="number" id="testing_total" name="testing_total" required>
+        <br>
+        <label for="testing_correct">Correct Testing Predictions:</label>
+        <input type="number" id="testing_correct" name="testing_correct" required>
+        <br>
+
+        <input type="submit" value="Calculate">
+    </form>
+
+    {% if accuracy is not none %}
+        <h2>Results</h2>
+        <p>Accuracy: {{ accuracy }}%</p>
+        <p>Error Rate: {{ error_rate }}%</p>
+        <p>Validation Accuracy: {{ validation_accuracy }}%</p>
+        <p>Testing Accuracy: {{ testing_accuracy }}%</p>
+
+        <h3>Plot</h3>
+        <img src="{{ url_for('static', filename='plot.png') }}" alt="Accuracy and Error Rate Plot">
+    {% endif %}
+</body>
+</html>

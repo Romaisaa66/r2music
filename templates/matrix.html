@@ -1,0 +1,38 @@
+
+
+import numpy as np
+from flask import Flask, render_template
+
+r2music = Flask(__name__)
+
+# Define emotions and their associated songs
+emotion_to_tracks = {
+    'happy': ['0XgoXio6L2d5tFhIq0K0ty', '60nZcImufyMA1MKQY3dcCH'],
+    'sad': ['1Y84d8A6RpteKamrSWGQ04', '2fhOljbX79loRcdl47SFye'],
+    'angry': ['1IT0WQk5J8NsaeII8ktdlZ', '285pBltuF7vW8TeWk8hdRR'],
+    'surprise': ['4rlQza35DE4Prh5yonxnCs', '5p3xMIHQ6YoAIaSgZeOkNa?si=5f8bcc4a8e6c4e25'],
+    'neutral': ['3J2WUEn6oFN8eDPZov7w9I', '40cAclLDpkh2M8GGmIpVoM'],
+}
+
+# Create a list of all unique songs
+all_songs = sorted(set(song for songs in emotion_to_tracks.values() for song in songs))
+
+# Initialize the matrix
+matrix = np.zeros((len(emotion_to_tracks), len(all_songs)), dtype=bool)
+
+# Fill the matrix with True/False
+for i, emotion in enumerate(emotion_to_tracks):
+    for song in emotion_to_tracks[emotion]:
+        if song in all_songs:
+            song_index = all_songs.index(song)
+            matrix[i, song_index] = True
+
+# Convert to a more readable format (e.g., list of lists)
+matrix_list = matrix.tolist()
+
+@r2music.route('/')
+def index():
+    return render_template('matrix.html', matrix=matrix_list, emotions=list(emotion_to_tracks.keys()), songs=all_songs)
+
+if __name__ == '__main__':
+    r2music.run(debug=True)

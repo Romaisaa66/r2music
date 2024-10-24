@@ -1,0 +1,19 @@
+<!-- select_track.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track List</title>
+</head>
+<body>
+    <h1>Tracks for Emotion: {{ emotion }}</h1>
+    <ul>
+        {% for track in tracks %}
+            <li>
+                <a href="{{ track.url }}" target="_blank">{{ track.uri }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('index') }}">Back</a>
+</body>
+</html>
