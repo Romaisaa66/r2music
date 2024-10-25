@@ -1,1 +1,1 @@
-web: waitress-serve --port=$PORT r2music:app
+gunicorn r2music:app
