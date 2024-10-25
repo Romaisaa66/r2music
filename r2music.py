@@ -2,10 +2,7 @@ import os
 import cv2
 from flask import Flask, render_template, request, redirect, url_for
 from deepface import DeepFace
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 import webbrowser
-
 # Set up environment variable to skip dotenv
 os.environ['FLASK_SKIP_DOTENV'] = '1'
 
@@ -122,7 +119,6 @@ emotion_to_tracks = {
         {'uri': 'spotify:track:3Srw8isgDzmYsgwDi4MtbD?si=3f47a818aeaa4add', 'url': 'https://open.spotify.com/track/3Srw8isgDzmYsgwDi4MtbD?si=3f47a818aeaa4add', 'name': 'Neutral Song 20'}
     ]
 }
-
 r2music = Flask(__name__)
 
 @r2music.route('/')
@@ -150,7 +146,6 @@ def capture_image():
         if results:
             if isinstance(results, list) and len(results) > 0:
                 emotion = results[0]['dominant_emotion']
-
                 if emotion in emotion_to_tracks:
                     tracks = emotion_to_tracks[emotion]
                     return render_template('song_selection.html', emotion=emotion, tracks=tracks)
@@ -171,20 +166,7 @@ def play_song():
         return redirect(url_for('index'))
     return "No track selected", 400
 
+# إضافة الكود لتحديد المنفذ الصحيح
 if __name__ == '__main__':
-    r2music.run(debug=True)
-
-
-
-def app():
-    return None
-
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return render_template('index.html')  # تأكد من وجود ملف index.html
-
-if __name__ == '__main__':
-    app.run(port=7777)
+    port = int(os.environ.get("PORT", 8000))  # استخدام PORT من المتغيرات البيئية
+    r2music.run(debug=True, host='0.0.0.0', port=port)
