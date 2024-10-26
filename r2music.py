@@ -1,23 +1,25 @@
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 import os
 import cv2
 from flask import Flask, render_template, request, redirect, url_for
 from deepface import DeepFace
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 import webbrowser
+
 # Set up environment variable to skip dotenv
 os.environ['FLASK_SKIP_DOTENV'] = '1'
 
 # Spotify setup
 CLIENT_ID = '05379b84b9844aa9a8c17c66da1ed8b2'  # Replace with your actual Client ID
 CLIENT_SECRET = '75b059e18c0545af9a0e1d684d3b9875'  # Replace with your actual Client Secret
-REDIRECT_URI = 'http://localhost:7777/callback'
+REDIRECT_URI = 'http://192.168.1.100:7777/callback'
 
 scope = "user-library-read playlist-modify-public user-read-playback-state user-modify-playback-state"
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                client_secret=CLIENT_SECRET,
                                                redirect_uri=REDIRECT_URI,
                                                scope=scope))
+
 
 # Map emotions to songspip list
 emotion_to_tracks = {
@@ -121,6 +123,7 @@ emotion_to_tracks = {
         {'uri': 'spotify:track:3Srw8isgDzmYsgwDi4MtbD?si=3f47a818aeaa4add', 'url': 'https://open.spotify.com/track/3Srw8isgDzmYsgwDi4MtbD?si=3f47a818aeaa4add', 'name': 'Neutral Song 20'}
     ]
 }
+
 r2music = Flask(__name__)
 
 @r2music.route('/')
@@ -148,6 +151,7 @@ def capture_image():
         if results:
             if isinstance(results, list) and len(results) > 0:
                 emotion = results[0]['dominant_emotion']
+
                 if emotion in emotion_to_tracks:
                     tracks = emotion_to_tracks[emotion]
                     return render_template('song_selection.html', emotion=emotion, tracks=tracks)
@@ -168,7 +172,24 @@ def play_song():
         return redirect(url_for('index'))
     return "No track selected", 400
 
-# إضافة الكود لتحديد المنفذ الصحيح
+
+def play_song(track_uri):
+
+    devices = sp.devices()
+    device_ids = []
+
+    target_device_names = [' iPhone11 ', ' Samsung']
+
+    for device in devices['devices']:
+        if device['name'] in target_device_names:
+            device_ids.append(device['id'])
+
+    for device_id in device_ids:
+        sp.start_playback(device_id=device_id, uris=[track_uri])
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8000))  # استخدام PORT من المتغيرات البيئية
-    r2music.run(debug=True, host='0.0.0.0', port=port)
+   r2music.run(host='0.0.0.0', port=5000)
+
+
+
+def app():
+    return None
